@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Title of the document</title>
+</head>
+
+<body>
+  <form id="rounds_form">
+    <fieldset>
+      <input type="text" name="shift">
+    </fieldset>
+  </form>
+  
+  <script type="text/javascript">
+    var roundsData = {};
+    var roundsDataTemplate = {
+      unit: null,
+      temperature: null,
+      humidity: null,
+      cooling: null,
+      second_temp: null,
+      free_cooling: null
+    };
+    
+    var roundsIndex = {}; // Will be updated with an external datasource
+    
+    // VIEWS
+    var parentForm = null;
+    // END VIEWS
+  </script>
+</body>
+
+</html>
