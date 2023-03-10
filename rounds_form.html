@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Title of the document</title>
+  <title>Title of the document</title>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script type="text/javascript">/**
+    * jQuery serializeObject
+    * @copyright 2014, macek <paulmacek@gmail.com>
+    * @link https://github.com/macek/jquery-serialize-object
+    * @license BSD
+    * @version 2.5.0
+    */
+   !function(e,i){if("function"==typeof define&&define.amd)define(["exports","jquery"],function(e,r){return i(e,r)});else if("undefined"!=typeof exports){var r=require("jquery");i(exports,r)}else i(e,e.jQuery||e.Zepto||e.ender||e.$)}(this,function(e,i){function r(e,r){function n(e,i,r){return e[i]=r,e}function a(e,i){for(var r,a=e.match(t.key);void 0!==(r=a.pop());)if(t.push.test(r)){var u=s(e.replace(/\[\]$/,""));i=n([],u,i)}else t.fixed.test(r)?i=n([],r,i):t.named.test(r)&&(i=n({},r,i));return i}function s(e){return void 0===h[e]&&(h[e]=0),h[e]++}function u(e){switch(i('[name="'+e.name+'"]',r).attr("type")){case"checkbox":return"on"===e.value?!0:e.value;default:return e.value}}function f(i){if(!t.validate.test(i.name))return this;var r=a(i.name,u(i));return l=e.extend(!0,l,r),this}function d(i){if(!e.isArray(i))throw new Error("formSerializer.addPairs expects an Array");for(var r=0,t=i.length;t>r;r++)this.addPair(i[r]);return this}function o(){return l}function c(){return JSON.stringify(o())}var l={},h={};this.addPair=f,this.addPairs=d,this.serialize=o,this.serializeJSON=c}var t={validate:/^[a-z_][a-z0-9_]*(?:\[(?:\d*|[a-z0-9_]+)\])*$/i,key:/[a-z0-9_]+|(?=\[\])/gi,push:/^$/,fixed:/^\d+$/,named:/^[a-z0-9_]+$/i};return r.patterns=t,r.serializeObject=function(){return new r(i,this).addPairs(this.serializeArray()).serialize()},r.serializeJSON=function(){return new r(i,this).addPairs(this.serializeArray()).serializeJSON()},"undefined"!=typeof i.fn&&(i.fn.serializeObject=r.serializeObject,i.fn.serializeJSON=r.serializeJSON),e.FormSerializer=r,r});</script>
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
-<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 
 <body>
   <form id="rounds_form">
@@ -15,129 +25,119 @@
 
     <fieldset name="dca">
       <legend>DCA</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="dca[temperature]" placeholder="Temperature">
+      <input type="text" name="dca[humidity]" placeholder="Humidity">
     </fieldset>
 
     <fieldset name="l3">
       <legend>L3</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
-      <input type="text" name="cooling" placeholder="Cooling">
-      <input type="text" name="free_cooling" placeholder="Free Cooling">
+      <input type="text" name="l3[temperature]" placeholder="Temperature">
+      <input type="text" name="l3[humidity]" placeholder="Humidity">
+      <input type="text" name="l3[cooling]" placeholder="Cooling">
+      <input type="text" name="l3[free_cooling]" placeholder="Free Cooling">
     </fieldset>
 
     <fieldset name="l1">
       <legend>L1</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
-      <input type="text" name="cooling" placeholder="Cooling">
-      <input type="text" name="free_cooling" placeholder="Free Cooling">
+      <input type="text" name="l1[temperature]" placeholder="Temperature">
+      <input type="text" name="l1[humidity]" placeholder="Humidity">
+      <input type="text" name="l1[cooling]" placeholder="Cooling">
+      <input type="text" name="l1[free_cooling]" placeholder="Free Cooling">
     </fieldset>
 
     <fieldset name="aisle">
       <legend>Aisle</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="aisle[temperature]" placeholder="Temperature">
+      <input type="text" name="aisle[humidity]" placeholder="Humidity">
     </fieldset>
 
     <fieldset name="l2">
       <legend>L2</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
-      <input type="text" name="cooling" placeholder="Cooling">
-      <input type="text" name="free_cooling" placeholder="Free Cooling">
+      <input type="text" name="l2[temperature]" placeholder="Temperature">
+      <input type="text" name="l2[humidity]" placeholder="Humidity">
+      <input type="text" name="l2[cooling]" placeholder="Cooling">
+      <input type="text" name="l2[free_cooling]" placeholder="Free Cooling">
     </fieldset>
 
     <fieldset name="dcb">
       <legend>DCB</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="dcb[temperature]" placeholder="Temperature">
+      <input type="text" name="dcb[humidity]" placeholder="Humidity">
     </fieldset>
 
     <fieldset name="l7">
       <legend>L7</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
-      <input type="text" name="cooling" placeholder="Cooling">
-      <input type="text" name="free_cooling" placeholder="Free Cooling">
+      <input type="text" name="l7[temperature]" placeholder="Temperature">
+      <input type="text" name="l7[humidity]" placeholder="Humidity">
+      <input type="text" name="l7[cooling]" placeholder="Cooling">
+      <input type="text" name="l7[free_cooling]" placeholder="Free Cooling">
     </fieldset>
 
     <fieldset name="l2">
       <legend>L2</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
-      <input type="text" name="cooling" placeholder="Cooling">
-      <input type="text" name="free_cooling" placeholder="Free Cooling">
+      <input type="text" name="l2[temperature]" placeholder="Temperature">
+      <input type="text" name="l2[humidity]" placeholder="Humidity">
+      <input type="text" name="l2[cooling]" placeholder="Cooling">
+      <input type="text" name="l2[free_cooling]" placeholder="Free Cooling">
     </fieldset>
 
     <fieldset name="stultz">
       <legend>Stultz</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="stultz[temperature]" placeholder="Temperature">
+      <input type="text" name="stultz[humidity]" placeholder="Humidity">
     </fieldset>
 
     <fieldset name="dcd">
       <legend>DCD</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="dcd[temperature]" placeholder="Temperature">
+      <input type="text" name="dcd[humidity]" placeholder="Humidity">
     </fieldset>
 
     <fieldset name="dmarc_b">
       <legend>DMARC B</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="dmarc_b[temperature]" placeholder="Temperature">
+      <input type="text" name="dmarc_b[humidity]" placeholder="Humidity">
     </fieldset>
 
     <fieldset name="ups_b">
       <legend>UPS B</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
-      <input type="text" name="second_temp" placeholder="Second Temperature">
+      <input type="text" name="ups_b[temperature]" placeholder="Temperature">
+      <input type="text" name="ups_b[humidity]" placeholder="Humidity">
+      <input type="text" name="ups_b[second_temp]" placeholder="Second Temperature">
     </fieldset>
 
     <fieldset name="ceiling_temp">
       <legend>Ceiling Temps</legend>
-      <input type="text" name="temperature[]" placeholder="Temperature 1">
-      <input type="text" name="temperature[]" placeholder="Temperature 2">
-      <input type="text" name="temperature[]" placeholder="Temperature 3">
-      <input type="text" name="temperature[]" placeholder="Temperature 4">
+      <input type="text" name="ceiling_temp[temperature][]" placeholder="Temperature 1">
+      <input type="text" name="ceiling_temp[temperature][]" placeholder="Temperature 2">
+      <input type="text" name="ceiling_temp[temperature][]" placeholder="Temperature 3">
+      <input type="text" name="ceiling_temp[temperature][]" placeholder="Temperature 4">
     </fieldset>
 
     <fieldset name="glycol_pumps">
       <legend>Glycol Pumps</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
-      <input type="text" name="second_temp" placeholder="Second Temperature">
+      <input type="text" name="glycol_pumps[temperature]" placeholder="Temperature">
+      <input type="text" name="glycol_pumps[humidity]" placeholder="Humidity">
+      <input type="text" name="glycol_pumps[second_temp]" placeholder="Second Temperature">
     </fieldset>
 
     <fieldset name="dmarc_a">
       <legend>DMARC A</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="dmarc_a[temperature]" placeholder="Temperature">
+      <input type="text" name="dmarc_a[humidity]" placeholder="Humidity">
     </fieldset>
 
     <fieldset name="ups_a">
       <legend>UPS A</legend>
-      <input type="text" name="temperature" placeholder="Temperature">
-      <input type="text" name="humidity" placeholder="Humidity">
-      <input type="text" name="second_temp" placeholder="Second Temperature">
+      <input type="text" name="ups_a[temperature]" placeholder="Temperature">
+      <input type="text" name="ups_a[humidity]" placeholder="Humidity">
+      <input type="text" name="ups_a[second_temp]" placeholder="Second Temperature">
     </fieldset>
+
+    <input type="submit" value="SUBMIT">
   </form>
   
   <script type="text/javascript">
-    var roundsData = {};
-    var roundsDataTemplate = {
-      unit: null,
-      temperature: null,
-      humidity: null,
-      cooling: null,
-      second_temp: null,
-      free_cooling: null
-    };
-    
-    var roundsIndex = {}; // Will be updated with an external datasource
-    
     // VIEWS
     var parentForm = document.getElementById("rounds_form");
 
@@ -189,6 +189,20 @@
 
 
     // END VIEWS
+
+    // FORM SUBMIT
+    var submitButton = parentForm.querySelector("input[type='submit']");
+
+    submitButton.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      
+      var form_data = $(parentForm).serializeObject();
+
+    });
+
+    // XLSX
+    // XLSX
   </script>
 </body>
 
