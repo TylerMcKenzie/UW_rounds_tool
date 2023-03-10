@@ -8,8 +8,120 @@
 <body>
   <form id="rounds_form">
     <fieldset name="shift_metadata">
-      <input type="text" name="shift">
+      <legend>Shift Information</legend>
+      <input type="text" name="shift" placeholder="Shift">
       <input type="date" name="date">
+    </fieldset>
+
+    <fieldset name="dca">
+      <legend>DCA</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+    </fieldset>
+
+    <fieldset name="l3">
+      <legend>L3</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="cooling" placeholder="Cooling">
+      <input type="text" name="free_cooling" placeholder="Free Cooling">
+    </fieldset>
+
+    <fieldset name="l1">
+      <legend>L1</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="cooling" placeholder="Cooling">
+      <input type="text" name="free_cooling" placeholder="Free Cooling">
+    </fieldset>
+
+    <fieldset name="aisle">
+      <legend>Aisle</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+    </fieldset>
+
+    <fieldset name="l2">
+      <legend>L2</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="cooling" placeholder="Cooling">
+      <input type="text" name="free_cooling" placeholder="Free Cooling">
+    </fieldset>
+
+    <fieldset name="dcb">
+      <legend>DCB</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+    </fieldset>
+
+    <fieldset name="l7">
+      <legend>L7</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="cooling" placeholder="Cooling">
+      <input type="text" name="free_cooling" placeholder="Free Cooling">
+    </fieldset>
+
+    <fieldset name="l2">
+      <legend>L2</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="cooling" placeholder="Cooling">
+      <input type="text" name="free_cooling" placeholder="Free Cooling">
+    </fieldset>
+
+    <fieldset name="stultz">
+      <legend>Stultz</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+    </fieldset>
+
+    <fieldset name="dcd">
+      <legend>DCD</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+    </fieldset>
+
+    <fieldset name="dmarc_b">
+      <legend>DMARC B</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+    </fieldset>
+
+    <fieldset name="ups_b">
+      <legend>UPS B</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="second_temp" placeholder="Second Temperature">
+    </fieldset>
+
+    <fieldset name="ceiling_temp">
+      <legend>Ceiling Temps</legend>
+      <input type="text" name="temperature[]" placeholder="Temperature 1">
+      <input type="text" name="temperature[]" placeholder="Temperature 2">
+      <input type="text" name="temperature[]" placeholder="Temperature 3">
+      <input type="text" name="temperature[]" placeholder="Temperature 4">
+    </fieldset>
+
+    <fieldset name="glycol_pumps">
+      <legend>Glycol Pumps</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="second_temp" placeholder="Second Temperature">
+    </fieldset>
+
+    <fieldset name="dmarc_a">
+      <legend>DMARC A</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+    </fieldset>
+
+    <fieldset name="ups_a">
+      <legend>UPS A</legend>
+      <input type="text" name="temperature" placeholder="Temperature">
+      <input type="text" name="humidity" placeholder="Humidity">
+      <input type="text" name="second_temp" placeholder="Second Temperature">
     </fieldset>
   </form>
   
@@ -27,9 +139,55 @@
     var roundsIndex = {}; // Will be updated with an external datasource
     
     // VIEWS
-    var parentForm = null;
-    var dateInput = document.getElementById("rounds_form").querySelector("input[type='date']");
-    dateInput.value = new Date().toLocaleDateString();
+    var parentForm = document.getElementById("rounds_form");
+
+    // SHIFT INPUT
+    // Auto set shift
+    var shiftInput = parentForm.querySelector("input[name='shift']");
+
+    var setDateTime = function(date, str){
+      var sp = str.split(':');
+      date.setHours(parseInt(sp[0],10));
+      date.setMinutes(parseInt(sp[1],10));
+      date.setSeconds(parseInt(sp[2],10));
+      return date;
+    }
+
+    var current = new Date();
+
+    var cT = current.getTime();
+
+    // First Shift
+    var first_start = setDateTime(new Date(current), '7:00:00');
+    var first_end = setDateTime(new Date(current), '15:30:00');
+
+    // Second Shift
+    var second_start = setDateTime(new Date(current), '15:00:00');
+    var second_end = setDateTime(new Date(current), '23:30:00');
+
+    // Third Shift
+    var third_start = setDateTime(new Date(current), '23:00:00');
+    var third_end = setDateTime(new Date(current), '7:30:00');
+
+    var curr_shift = "1st";
+    if (first_start < cT < first_end) {
+      curr_shift = "1st";
+    } else if (second_start < cT < second_end) {
+      curr_shift = "2nd";
+    } else /*if (third_start < cT < third_end)*/ {
+      curr_shift = "3rd";
+    }
+
+    shiftInput.value = curr_shift;
+    // SHIFT INPUT
+
+    // DATE INPUT
+    // Set date to current date
+    var dateInput = parentForm.querySelector("input[name='date']");
+    dateInput.valueAsDate = new Date();
+    // DATE INPUT
+
+
     // END VIEWS
   </script>
 </body>
