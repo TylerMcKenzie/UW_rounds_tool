@@ -7,8 +7,9 @@
 
 <body>
   <form id="rounds_form">
-    <fieldset>
+    <fieldset name="shift_metadata">
       <input type="text" name="shift">
+      <input type="date" name="date">
     </fieldset>
   </form>
   
@@ -27,6 +28,8 @@
     
     // VIEWS
     var parentForm = null;
+    var dateInput = document.getElementById("rounds_form").querySelector("input[type='date']");
+    dateInput.value = new Date().toLocaleDateString();
     // END VIEWS
   </script>
 </body>
