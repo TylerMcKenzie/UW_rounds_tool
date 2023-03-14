@@ -20,6 +20,8 @@
     <fieldset name="shift_metadata">
       <legend>Shift Information</legend>
       <input type="text" name="shift" placeholder="Shift">
+      <input type="text" name="initials" placeholder="Initials">
+      <input type="text" name="start_time" placeholder="Start Time (HHMM)">
       <input type="date" name="date">
     </fieldset>
 
@@ -116,8 +118,12 @@
 
     <fieldset name="glycol_pumps">
       <legend>Glycol Pumps</legend>
-      <input type="text" name="glycol_pumps[p1]" placeholder="P1">
-      <input type="text" name="glycol_pumps[p2]" placeholder="P2">
+      <label for="glycol_pumps[active]">P1</label>
+      <input type="radio" name="glycol_pumps[active]" value="p1" placeholder="P1" checked>
+      <label for="glycol_pumps[active]">P2</label>
+      <input type="radio" name="glycol_pumps[active]" value="p2" placeholder="P2">
+      <input type="text" name="glycol_pumps[pressure]" placeholder="Pump Pressure">
+      <input type="text" name="glycol_pumps[outside_temp]" placeholder="Outside Temp">
     </fieldset>
 
     <fieldset name="dmarc_a">
@@ -186,6 +192,13 @@
     dateInput.valueAsDate = new Date();
     // DATE INPUT
 
+    // Rounds Start time INPUT
+    var startTimeInput = parentForm.querySelector("input[name='start_time']");
+    var startTimeDateObject = new Date();
+    startTimeInput.value = ("0" + startTimeDateObject.getHours()).slice(-2) + "" + ("0" + startTimeDateObject.getMinutes()).slice(-2);
+
+    // Rounds Start time INPUT
+
     // END VIEWS
 
     // FORM SUBMIT
@@ -197,24 +210,182 @@
       var form_data = $(parentForm).serializeObject();
       console.log(form_data);
       
-      //format data into sheet
+      // WORKBOOK
+      var tdc_operations_rounds_workbook = XLSX.utils.book_new();
+
+      // sheets
+      // DC A
+      // data required - dca - l3 - l1 - aisle
+      var dc_a_worksheet_row_data = [
+        {
+          "dca_temperature": form_data.dca.temperature,
+          "dca_humidity": form_data.dca.humidity,
+          "l3_temperature": form_data.l3.temperature,
+          "l3_humidity": form_data.l3.humidity,
+          "l3_free_cooling": form_data.l3.free_cooling,
+          "l3_cooling": form_data.l3.cooling,
+          "l1_temperature": form_data.l1.temperature,
+          "l1_humidity": form_data.l1.humidity,
+          "l1_free_cooling": form_data.l1.free_cooling,
+          "l1_cooling": form_data.l1.cooling,
+          "aisle_temperature": form_data.aisle.temperature,
+          "aisle_humidity": form_data.aisle.humidity
+        }
+      ];
+
+      var dc_a_worksheet = XLSX.utils.json_to_sheet(dc_a_worksheet_row_data);
+      console.log(dc_a_worksheet);
+      // XLSX.utils.sheet_add_aoa(dc_a_worksheet_row_data, [
+      //   [
+      //     "Wall Temperature", 
+      //     "Wall Humidity", 
+      //     "Liebert AHU L3 Temperature", 
+      //     "Liebert AHU L3 Humidity", 
+      //     "Liebert AHU L3 Free Cooling", 
+      //     "Liebert AHU L3 Cooling",
+      //     "Libert AHU L1 Temperature",
+      //     "Libert AHU L1 Humidity",
+      //     "Liebert AHU L1 Free Cooling", 
+      //     "Liebert AHU L1 Cooling",
+      //     "Aisle Temperature",
+      //     "Aisle Humidity"
+      //   ]
+      // ], { origin: "A1" });
+
+      XLSX.utils.book_append_sheet(tdc_operations_rounds_workbook, dc_a_worksheet, "DC A");
+
+      // DC B
+      // data required - dcb - l7 -l2
+      var dc_b_worksheet_row_data = [
+        {
+          "dcb_temperature": form_data.dcb.temperature,
+          "dcb_humidity": form_data.dcb.humidity,
+          "l7_temperature": form_data.l7.temperature,
+          "l7_humidity": form_data.l7.humidity,
+          "l7_cooling": form_data.l7.cooling,
+          "l7_free_cooling": form_data.l7.free_cooling,
+          "l2_temperature": form_data.l2.temperature,
+          "l2_humidity": form_data.l2.humidity,
+          "l2_cooling": form_data.l2.cooling,
+          "l2_free_cooling": form_data.l2.free_cooling
+        }
+      ];
+
+      console.log(dc_b_worksheet_row_data);
+      var dc_b_worksheet = XLSX.utils.json_to_sheet(dc_b_worksheet_row_data);
+
+      // XLSX.utils.sheet_add_aoa(dc_b_worksheet_row_data, [
+      //   [
+      //     "Room Temp",
+      //     "Room Humidity",
+      //     "Liebert L7 CRAC Temp",
+      //     "Liebert L7 CRAC Humidity",
+      //     "Liebert L7 CRAC Cooling",
+      //     "Liebert L7 CRAC Free Cooling",
+      //     "L2 CRAC Temp	L2 CRAC Humidty",
+      //     "L2 CRAC Cooling",
+      //     "L2 CRAC Free Cooling"
+      //   ]
+      // ], { origin: "A1" });
+
+      XLSX.utils.book_append_sheet(tdc_operations_rounds_workbook, dc_b_worksheet, "DC B");
+
+      // DC D
+      // data required - dcd - stultz
+      var dc_d_worksheet_row_data = [
+        {
+          "stultz_temperature": form_data.stultz.temperature,
+          "stultz_humidity": form_data.stultz.humidity,
+          "dcd_temperature": form_data.dcd.temperature,
+          "dcd_humidity": form_data.dcd.humidity
+        }
+      ];
       
+      console.log(dc_d_worksheet_row_data);
+      var dc_d_worksheet = XLSX.utils.json_to_sheet(dc_d_worksheet_row_data);
+      XLSX.utils.book_append_sheet(tdc_operations_rounds_workbook, dc_d_worksheet, "DC D");
+
+      // UPS A
+      // data required - ups_a
+      var ups_a_worksheet_row_data = [
+        {
+          "ups_a_temperature": form_data.ups_a.temperature,
+          "ups_a_humidity": form_data.ups_a.humidity,
+          "ups_a_second_temp": form_data.ups_a.second_temp
+        }
+      ];
+
+      console.log(ups_a_worksheet_row_data);
+      var ups_a_worksheet = XLSX.utils.json_to_sheet(ups_a_worksheet_row_data);
+      XLSX.utils.book_append_sheet(tdc_operations_rounds_workbook, ups_a_worksheet, "UPS A");
+
+      // UPS B
+      // data required - ups_b
+      var ups_b_worksheet_row_data = [
+        {
+          "ups_b_temperature": form_data.ups_b.temperature,
+          "ups_b_humidity": form_data.ups_b.humidity,
+          "ups_b_second_temp": form_data.ups_b.second_temp
+        }
+      ];
+
+      console.log(ups_b_worksheet_row_data);
+      var ups_b_worksheet = XLSX.utils.json_to_sheet(ups_b_worksheet_row_data);
+      XLSX.utils.book_append_sheet(tdc_operations_rounds_workbook, ups_b_worksheet, "UPS B");
+
+      // Demarc A
+      // data required - dmarc_a
+      var dmarc_a_worksheet_row_data = [
+        {
+          "dmarc_a_temperature": form_data.dmarc_a.temperature,
+          "dmarc_a_humidity": form_data.dmarc_a.humidity
+        }
+      ];
+
+      console.log(dmarc_a_worksheet_row_data);
+      var dmarc_a_worksheet = XLSX.utils.json_to_sheet(dmarc_a_worksheet_row_data);
+      XLSX.utils.book_append_sheet(tdc_operations_rounds_workbook, dmarc_a_worksheet, "Demarc A");
+
+      // Demarc B
+      // data required - dmarc_b
+      var dmarc_b_worksheet_row_data = [
+        {
+          "dmarc_b_temperature": form_data.dmarc_b.temperature,
+          "dmarc_b_humidity": form_data.dmarc_b.humidity
+        }
+      ];
+
+      console.log(dmarc_b_worksheet_row_data);
+      var dmarc_b_worksheet = XLSX.utils.json_to_sheet(dmarc_b_worksheet_row_data);
+      XLSX.utils.book_append_sheet(tdc_operations_rounds_workbook, dmarc_b_worksheet, "Demarc B");
+
+      // Glycol Pumps
+      // data required - glycol_pumps - ceiling_temp
+      var p1_pump_status = form_data.glycol_pumps.active == "p1" ? "x" : "o";
+      var p2_pump_status = form_data.glycol_pumps.active == "p2" ? "x" : "o";
+
+      var glycol_pumps_worksheet_row_data = [
+        {
+          "p1": p1_pump_status,
+          "p2": p2_pump_status,
+          "pressure": form_data.glycol_pumps.pressure,
+          "outside_temp": form_data.glycol_pumps.outside_temp,
+          "ceiling_temp1": form_data.ceiling_temp.temperature[1],
+          "ceiling_temp2": form_data.ceiling_temp.temperature[2],
+          "ceiling_temp3": form_data.ceiling_temp.temperature[3],
+          "ceiling_temp4": form_data.ceiling_temp.temperature[4],
+          "time/initials": form_data.initials + " " + form_data.start_time
+        }
+      ];
       
-      /*
-      const worksheet = XLSX.utils.json_to_sheet(rows);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Dates");
 
-      // fix headers
-      XLSX.utils.sheet_add_aoa(worksheet, [["Name", "Birthday"]], { origin: "A1" });
-
-      // calculate column width
-      const max_width = rows.reduce((w, r) => Math.max(w, r.name.length), 10);
-      worksheet["!cols"] = [ { wch: max_width } ];
-
-      // create an XLSX file and try to save to Presidents.xlsx
-      XLSX.writeFile(workbook, "Presidents.xlsx", { compression: true });
-      */
+      console.log(glycol_pumps_worksheet_row_data);
+      var glycol_pumps_worksheet = XLSX.utils.json_to_sheet(glycol_pumps_worksheet_row_data);
+      XLSX.utils.book_append_sheet(tdc_operations_rounds_workbook, glycol_pumps_worksheet, "Glycol Pumps");
+      
+      // EXPORT WORKBOOK
+      var save_date = new Date();
+      XLSX.writeFile(tdc_operations_rounds_workbook, "TDC_Operations_Rounds_" + save_date.getMonth() + "_" + save_date.getDate() + "_" + save_date.getFullYear() + ".xlsx", { compression: true });
     });
 
     // XLSX
