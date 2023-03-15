@@ -206,7 +206,7 @@
           if (typeof form_data[inputName] == "object") {
             // find each input in the object list and fill the data if it exists
             for (var inputField in form_data[inputName]) {
-              if (typeof form_data[inputName][inputField] == "array") {
+              if (Array.isArray(form_data[inputName][inputField])) {
                 for (var inputIndex in form_data[inputName][inputField]) {
                   var _$input = $(`input[name="${inputName}[${inputField}][${inputIndex}]"]`);
                   _$input.val(form_data[inputName][inputField][inputIndex]);
