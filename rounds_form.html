@@ -15,6 +15,39 @@
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
 
+<style>
+  @media only screen and (max-width: 768px) {
+    form {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    fieldset {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      padding: 1em;
+      margin: 1em;
+    }
+
+    input[type="text"], input[type="date"] {
+      height: 2em;
+      text-align: center;
+      padding: 0.8em;
+      margin: 1em 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 1em;
+      margin: 1em 0 2em 0;
+    } 
+  }
+</style>
+
 <body>
   <form id="rounds_form">
     <fieldset name="shift_metadata">
@@ -110,10 +143,12 @@
 
     <fieldset name="glycol_pumps">
       <legend>Glycol Pumps</legend>
-      <label for="glycol_pumps[active]">P1</label>
-      <input type="radio" name="glycol_pumps[active]" value="p1" placeholder="P1" checked>
-      <label for="glycol_pumps[active]">P2</label>
-      <input type="radio" name="glycol_pumps[active]" value="p2" placeholder="P2">
+      <div>
+        <label for="glycol_pumps[active]">P1</label>
+        <input type="radio" name="glycol_pumps[active]" value="p1" placeholder="P1" checked>
+        <label for="glycol_pumps[active]">P2</label>
+        <input type="radio" name="glycol_pumps[active]" value="p2" placeholder="P2">
+      </div>
       <input type="text" inputmode="numeric" name="glycol_pumps[pressure]" placeholder="Pump Pressure">
       <input type="text" inputmode="numeric" name="glycol_pumps[outside_temp]" placeholder="Outside Temp">
     </fieldset>
