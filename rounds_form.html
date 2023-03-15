@@ -215,16 +215,28 @@
                 if (form_data[inputName][inputField].length) {
                   var _$input = $(`input[name="${inputName}[${inputField}]"]`);
                   
-                  _$input.val(form_data[inputName][inputField]);
+                  if (_$input.attr("type") == "radio") {
+                    _$input.removeAttr("checked");
+
+                    _$input.siblings(`[value='${form_data[inputName][inputField]}']`).attr("checked", true);
+                  } else {
+                    _$input.val(form_data[inputName][inputField]);
+                  }
                 }
               }
             }
           } else {
             // find the input and fill the value if it exists
             if (form_data[inputName].length) {
-              var _$input = $(`input[name="${inputName}"]`);
-              
-              _$input.val(form_data[inputName]);
+              if (_$input.attr("type") == "radio") {
+                _$input.removeAttr("checked");
+
+                _$input.siblings(`[value='${form_data[inputName]}']`).attr("checked", true);
+              } else {
+                var _$input = $(`input[name="${inputName}"]`);
+                
+                _$input.val(form_data[inputName]);
+              }
             }
           }
         }
