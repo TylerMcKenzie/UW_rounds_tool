@@ -209,7 +209,7 @@
         console.log(sheetData)
 
         var worksheet = XLSX.utils.json_to_sheet(sheetData);
-        XSLX.utils.book_append_sheet(workbook, worksheet, sheetName);
+        XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
       }
 
       // sheets
