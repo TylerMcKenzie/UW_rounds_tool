@@ -102,10 +102,10 @@
 
     <fieldset name="ceiling_temp">
       <legend>Ceiling Temps</legend>
-      <input type="text" name="ceiling_temp[temperature][]" placeholder="Temperature 1">
-      <input type="text" name="ceiling_temp[temperature][]" placeholder="Temperature 2">
-      <input type="text" name="ceiling_temp[temperature][]" placeholder="Temperature 3">
-      <input type="text" name="ceiling_temp[temperature][]" placeholder="Temperature 4">
+      <input type="text" name="ceiling_temp[temperature][0]" placeholder="Temperature 1">
+      <input type="text" name="ceiling_temp[temperature][1]" placeholder="Temperature 2">
+      <input type="text" name="ceiling_temp[temperature][2]" placeholder="Temperature 3">
+      <input type="text" name="ceiling_temp[temperature][3]" placeholder="Temperature 4">
     </fieldset>
 
     <fieldset name="glycol_pumps">
@@ -197,12 +197,41 @@
     window.addEventListener("load", (e) => {
       // Check for session data
       var form_data_json = sessionStorage.getItem("form_data");
+
       if (form_data_json) {
         var form_data = JSON.parse(form_data_json);
         console.log(form_data);
-      }
-    })
 
+        for (var inputName in form_data) {
+          if (typeof form_data[inputName] == "object") {
+            // find each input in the object list and fill the data if it exists
+            for (var inputField in form_data[inputName]) {
+              if (typeof form_data[inputName][inputField] == "array") {
+                for (var inputIndex in form_data[inputName][inputField]) {
+                  var _$input = $(`input[name="${inputName}[${inputField}][${inputIndex}]"]`);
+                  _$input.val(form_data[inputName][inputField][inputIndex]);
+                }
+              } else {
+                if (form_data[inputName][inputField].length) {
+                  var _$input = $(`input[name="${inputName}[${inputField}]"]`);
+                  
+                  _$input.val(form_data[inputName][inputField]);
+                }
+              }
+            }
+          } else {
+            // find the input and fill the value if it exists
+            if (form_data[inputName].length) {
+              var _$input = $(`input[name="${inputName}"]`);
+              
+              _$input.val(form_data[inputName]);
+            }
+          }
+        }
+      }
+    });
+
+    // Save form Session data
     window.addEventListener("beforeunload", (e) => {
       var form_data = JSON.stringify($(parentForm).serializeObject());
       sessionStorage.setItem("form_data", form_data);
