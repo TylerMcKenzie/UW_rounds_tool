@@ -191,6 +191,11 @@
       <input type="text" inputmode="numeric" name="ups_a[second_temp]" placeholder="Second Temperature">
     </fieldset>
 
+    <fieldset name="notes">
+      <legend>Notes</legend>
+      <input type="text" name="notes" style="height: 400px;"></textarea>
+    </fieldset>
+
     <button type="submit">SUBMIT</button>
   </form>
   
@@ -478,7 +483,8 @@
           "ceiling_temp2": form_data.ceiling_temp.temperature[1],
           "ceiling_temp3": form_data.ceiling_temp.temperature[2],
           "ceiling_temp4": form_data.ceiling_temp.temperature[3],
-          "time/initials": form_data.initials + " " + form_data.start_time
+          "time/initials": form_data.initials + " " + form_data.start_time,
+          "NOTES": form_data.notes
         }
       ];
       
