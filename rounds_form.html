@@ -72,6 +72,7 @@
       <input type="text" name="initials" placeholder="Initials">
       <input type="text" name="start_time" placeholder="Start Time (HHMM)">
       <input type="date" name="date">
+      <button id="reset_form_button">Reset Form</button>
     </fieldset>
 
     <fieldset name="dca">
@@ -193,40 +194,44 @@
     // Auto set shift
     var shiftInput = parentForm.querySelector("input[name='shift']");
 
-    var setDateTime = function(date, str){
-      var sp = str.split(':');
-      date.setHours(parseInt(sp[0],10));
-      date.setMinutes(parseInt(sp[1],10));
-      date.setSeconds(parseInt(sp[2],10));
-      return date;
+    function getCurrentShift() {
+      var setDateTime = function(date, str){
+        var sp = str.split(':');
+        date.setHours(parseInt(sp[0],10));
+        date.setMinutes(parseInt(sp[1],10));
+        date.setSeconds(parseInt(sp[2],10));
+        return date;
+      }
+  
+      var current = new Date();
+  
+      var cT = current.getTime();
+  
+      // First Shift
+      var first_start = setDateTime(new Date(current), '7:00:00');
+      var first_end = setDateTime(new Date(current), '15:30:00');
+  
+      // Second Shift
+      var second_start = setDateTime(new Date(current), '15:00:00');
+      var second_end = setDateTime(new Date(current), '23:30:00');
+  
+      // Third Shift
+      var third_start = setDateTime(new Date(current), '23:00:00');
+      var third_end = setDateTime(new Date(current), '7:30:00');
+  
+      var curr_shift = "1st";
+      if (first_start < cT < first_end) {
+        curr_shift = "1st";
+      } else if (second_start < cT < second_end) {
+        curr_shift = "2nd";
+      } else /*if (third_start < cT < third_end)*/ {
+        curr_shift = "3rd";
+      }
+
+      return curr_shift
     }
 
-    var current = new Date();
-
-    var cT = current.getTime();
-
-    // First Shift
-    var first_start = setDateTime(new Date(current), '7:00:00');
-    var first_end = setDateTime(new Date(current), '15:30:00');
-
-    // Second Shift
-    var second_start = setDateTime(new Date(current), '15:00:00');
-    var second_end = setDateTime(new Date(current), '23:30:00');
-
-    // Third Shift
-    var third_start = setDateTime(new Date(current), '23:00:00');
-    var third_end = setDateTime(new Date(current), '7:30:00');
-
-    var curr_shift = "1st";
-    if (first_start < cT < first_end) {
-      curr_shift = "1st";
-    } else if (second_start < cT < second_end) {
-      curr_shift = "2nd";
-    } else /*if (third_start < cT < third_end)*/ {
-      curr_shift = "3rd";
-    }
-
-    shiftInput.value = curr_shift;
+    shiftInput.value = getCurrentShift();
     // SHIFT INPUT
 
     // DATE INPUT
@@ -237,10 +242,31 @@
 
     // Rounds Start time INPUT
     var startTimeInput = parentForm.querySelector("input[name='start_time']");
-    var startTimeDateObject = new Date();
-    startTimeInput.value = ("0" + startTimeDateObject.getHours()).slice(-2) + "" + ("0" + startTimeDateObject.getMinutes()).slice(-2);
+
+    function getTimeHHMM() {
+      var startTimeDateObject = new Date();
+
+      return ("0" + startTimeDateObject.getHours()).slice(-2) + "" + ("0" + startTimeDateObject.getMinutes()).slice(-2);
+    }
+    startTimeInput.value = getTimeHHMM();
 
     // Rounds Start time INPUT
+
+    var reset_button = parentForm.getElementById("reset_form_button");
+    reset_button.addEventListener("click", (e) => {
+      e.preventDefault();
+      // Reset the form data
+      parentForm.reset();
+      // Clear session data
+      sessionStorage.removeItem("form_data");
+
+      // Reset Date input
+      dateInput.valueAsDate = new Date();
+      // Reset TimeInput
+      startTimeInput.value = getTimeHHMM();
+      // Reset Shift
+      shiftInput.value = getCurrentShift();
+    });
 
     // END VIEWS
 
