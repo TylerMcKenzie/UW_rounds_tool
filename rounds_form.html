@@ -109,6 +109,10 @@
       <input type="text" inputmode="numeric" name="l2[humidity]" placeholder="Humidity">
       <input type="text" inputmode="numeric" name="l2[cooling]" placeholder="Cooling">
       <input type="text" inputmode="numeric" name="l2[free_cooling]" placeholder="Free Cooling">
+      <div>
+        <label for="active_crac">Is active CRAC</label>
+        <input type="radio" value="active_crac" checked>
+      </div>
     </fieldset>
 
     <fieldset name="dcb">
@@ -123,6 +127,10 @@
       <input type="text" inputmode="numeric" name="l7[humidity]" placeholder="Humidity">
       <input type="text" inputmode="numeric" name="l7[cooling]" placeholder="Cooling">
       <input type="text" inputmode="numeric" name="l7[free_cooling]" placeholder="Free Cooling">
+      <div>
+        <label for="active_crac">Is active CRAC</label>
+        <input type="radio" value="active_crac">
+      </div>
     </fieldset>
 
     <fieldset name="stultz">
@@ -389,7 +397,8 @@
           "l2_temperature": form_data.l2.temperature,
           "l2_humidity": form_data.l2.humidity,
           "l2_cooling": form_data.l2.cooling,
-          "l2_free_cooling": form_data.l2.free_cooling
+          "l2_free_cooling": form_data.l2.free_cooling,
+          "active_crac": form_data.active_crac
         }
       ];
 
