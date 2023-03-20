@@ -64,10 +64,30 @@
     font-size: 64px;
     width: 100%;
   }
+
+  button[type="submit"] {
+    margin: 1em 1em 2em;
+  }
+
+  .button_container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .button_container button {
+    width: 48%;
+  }
 </style>
 
 <body>
   <form id="rounds_form">
+    <div class="button_container left">
+      <button id="back_button">BACK</button>
+        
+      <button id="next_button">NEXT</button>
+    </div>
+
     <fieldset name="shift_metadata">
       <legend>Shift Information</legend>
       <input type="text" name="shift" placeholder="Shift">
@@ -199,8 +219,32 @@
     </fieldset>
 
     <button type="submit">SUBMIT</button>
+
   </form>
-  
+
+  <script type="text/javascript">
+    var form = document.getElementById("rounds_form");
+
+    var fieldlist = $(form).find("fieldset");
+    // Hide all the fieldsets except the first
+    $(form).find("fieldset:not(:first)").hide();
+
+    var index = 0;
+    $(form).find(".button_container").on("click", "button", (e) => {
+      e.preventDefault();
+      var _$elm = $(e.target);
+      var prevIndex = index;
+
+      if (_$elm.attr("id") == 'back_button') {
+        index = index > 0 ? index-1 : index;
+      } else if (_$elm.attr('id') == 'next_button') {
+        index = index < fieldlist.length ? index+1 : index;
+      }
+      
+      $(fieldlist[prevIndex]).hide();
+      $(fieldlist[index]).show();
+    })
+  </script>
   <script type="text/javascript">
     // VIEWS
     var parentForm = document.getElementById("rounds_form");
