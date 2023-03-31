@@ -223,6 +223,7 @@
   </form>
 
   <script type="text/javascript">
+    // Form Navigation
     var form = document.getElementById("rounds_form");
 
     var fieldlist = $(form).find("fieldset");
@@ -238,7 +239,7 @@
       if (_$elm.attr("id") == 'back_button') {
         index = index > 0 ? index-1 : index;
       } else if (_$elm.attr('id') == 'next_button') {
-        index = index < fieldlist.length ? index+1 : index;
+        index = index < fieldlist.length-1 ? index+1 : index;
       }
       
       $(fieldlist[prevIndex]).hide();
