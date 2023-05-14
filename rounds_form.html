@@ -93,7 +93,7 @@
       <input type="text" name="shift" placeholder="Shift">
       <input type="text" name="initials" placeholder="Initials">
       <input type="text" name="start_time" placeholder="Start Time (HHMM)">
-      <input type="date" name="date">
+      <input type="date" name="date" value="">
       <button id="reset_form_button">Reset Form</button>
     </fieldset>
 
@@ -268,21 +268,22 @@
       var cT = current.getTime();
   
       // First Shift
-      var first_start = setDateTime(new Date(current), '7:00:00');
-      var first_end = setDateTime(new Date(current), '15:30:00');
+      var first_start = setDateTime(new Date(current), '07:00:00').getTime();
+      var first_end = setDateTime(new Date(current), '15:00:00').getTime();
   
       // Second Shift
-      var second_start = setDateTime(new Date(current), '15:00:00');
-      var second_end = setDateTime(new Date(current), '23:30:00');
+      var second_start = setDateTime(new Date(current), '15:00:00').getTime();
+      var second_end = setDateTime(new Date(current), '23:00:00').getTime();
   
       // Third Shift
-      var third_start = setDateTime(new Date(current), '23:00:00');
-      var third_end = setDateTime(new Date(current), '7:30:00');
-  
+      var third_start = setDateTime(new Date(current), '23:00:00').getTime();
+      var third_end = setDateTime(new Date(current), '07:00:00').getTime();
+
       var curr_shift = "1st";
-      if (first_start < cT < first_end) {
+
+      if (first_start < cT && cT < first_end) {
         curr_shift = "1st";
-      } else if (second_start < cT < second_end) {
+      } else if (second_start < cT && cT < second_end) {
         curr_shift = "2nd";
       } else /*if (third_start < cT < third_end)*/ {
         curr_shift = "3rd";
@@ -297,7 +298,8 @@
     // DATE INPUT
     // Set date to current date
     var dateInput = parentForm.querySelector("input[name='date']");
-    dateInput.valueAsDate = new Date();
+    var dateINputDate = new Date();
+    dateInput.valueAsDate = dateINputDate;
     // DATE INPUT
 
     // Rounds Start time INPUT
