@@ -317,17 +317,20 @@
     var reset_button = document.getElementById("reset_form_button");
     reset_button.addEventListener("click", (e) => {
       e.preventDefault();
-      // Reset the form data
-      parentForm.reset();
-      // Clear session data
-      sessionStorage.removeItem("form_data");
 
-      // Reset Date input
-      dateInput.valueAsDate = new Date();
-      // Reset TimeInput
-      startTimeInput.value = getTimeHHMM();
-      // Reset Shift
-      shiftInput.value = getCurrentShift();
+      if(confirm("Reset the form?")) {
+        // Reset the form data
+        parentForm.reset();
+        // Clear session data
+        sessionStorage.removeItem("form_data");
+  
+        // Reset Date input
+        dateInput.valueAsDate = new Date();
+        // Reset TimeInput
+        startTimeInput.value = getTimeHHMM();
+        // Reset Shift
+        shiftInput.value = getCurrentShift();
+      }
     });
 
     // END VIEWS
