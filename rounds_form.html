@@ -90,7 +90,12 @@
 
     <fieldset name="shift_metadata">
       <legend>Shift Information</legend>
-      <input type="text" name="shift" placeholder="Shift">
+      <select name="shift">
+        <option value="1st">1st</option>
+        <option value="2nd">2nd</option>
+        <option value="3rd">3rd</option>
+      </select>
+      <!-- <input type="text" name="shift" placeholder="Shift"> -->
       <input type="text" name="initials" placeholder="Initials">
       <input type="text" name="start_time" placeholder="Start Time (HHMM)">
       <input type="date" name="date" value="">
@@ -252,7 +257,7 @@
 
     // SHIFT INPUT
     // Auto set shift
-    var shiftInput = parentForm.querySelector("input[name='shift']");
+    var shiftInput = parentForm.querySelector("select[name='shift']");
 
     function getCurrentShift() {
       var setDateTime = function(date, str){
@@ -292,7 +297,12 @@
       return curr_shift
     }
 
-    shiftInput.value = getCurrentShift();
+    var current_shift = getCurrentShift();
+
+    var activeShiftInput = shiftInput.querySelector("input[value='" + current_shift + "']");
+    activeShiftInput.setAttribute('selected');
+
+    // shiftInput.value = getCurrentShift();
     // SHIFT INPUT
 
     // DATE INPUT
