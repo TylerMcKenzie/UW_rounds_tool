@@ -106,8 +106,10 @@
     width: auto;
   }
 
-  fieldset[name="field_display_order"] select option {
-    
+  fieldset[name="field_display_order"] button {
+    margin: auto;
+    padding: 0.25rem;
+    font-size: 48px;
   }
 
 </style>
@@ -257,6 +259,7 @@
 
     <fieldset name="field_display_order">
       <legend>Display Order</legend>
+      <button>RESET SORT</button>
     </fieldset>
 
     <button type="submit">SUBMIT</button>
@@ -773,6 +776,16 @@
 
       // Set field_display_order storage item
       sessionStorage.setItem("field_display_order", field_display_order_data_json)
+    })
+  </script>
+  <script>
+    let resetSortButton = parentForm.querySelector("fieldset[name=field_display_order] button");
+
+    resetSortButton.addEventListener("click", (evt) => {
+      evt.preventDefault();
+
+      sessionStorage.removeItem("field_display_order");
+      navigation.reload()
     })
   </script>
 </body>
