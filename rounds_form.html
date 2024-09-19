@@ -34,11 +34,11 @@
     flex-basis: 100%;
   }
 
-  input {
+  input, select {
     font-size: 64px;
   }
 
-  input[type="text"], input[type="date"] {
+  input[type="text"], input[type="date"], select {
     height: 2em;
     text-align: center;
     padding: 0.8em;
@@ -51,6 +51,10 @@
     -webkit-transform: translate(-5px, -5px)  scale(4); /* Chrome, Safari, Opera */
     transform:  translate(-5px, -5px) scale(4);
     margin: 0 1em;
+  }
+
+  select {
+    height: 4em;
   }
 
   textarea {
@@ -116,7 +120,12 @@
 
     <fieldset name="shift_metadata">
       <legend>Shift Information</legend>
-      <input type="text" name="shift" placeholder="Shift">
+      <select name="shift">
+        <option value="1st">1st</option>
+        <option value="2nd">2nd</option>
+        <option value="3rd">3rd</option>
+      </select>
+      <!-- <input type="text" name="shift" placeholder="Shift"> -->
       <input type="text" name="initials" placeholder="Initials">
       <input type="text" name="start_time" placeholder="Start Time (HHMM)">
       <input type="date" name="date" value="">
@@ -283,7 +292,7 @@
 
     // SHIFT INPUT
     // Auto set shift
-    var shiftInput = parentForm.querySelector("input[name='shift']");
+    var shiftInput = parentForm.querySelector("select[name='shift']");
 
     function getCurrentShift() {
       var setDateTime = function(date, str){
@@ -323,7 +332,12 @@
       return curr_shift
     }
 
-    shiftInput.value = getCurrentShift();
+    var current_shift = getCurrentShift();
+
+    var activeShiftInput = shiftInput.querySelector("option[value='" + current_shift + "']");
+    activeShiftInput.setAttribute('selected', '');
+
+    // shiftInput.value = getCurrentShift();
     // SHIFT INPUT
 
     // DATE INPUT
@@ -375,6 +389,7 @@
     var reset_button = document.getElementById("reset_form_button");
     reset_button.addEventListener("click", (e) => {
       e.preventDefault();
+
       // Reset the form data
       parentForm.reset();
       
@@ -382,12 +397,20 @@
       refreshSessionStorage(sessionStorage, "form_data")
       // sessionStorage.removeItem("form_data");
 
-      // Reset Date input
-      dateInput.valueAsDate = new Date();
-      // Reset TimeInput
-      startTimeInput.value = getTimeHHMM();
-      // Reset Shift
-      shiftInput.value = getCurrentShift();
+
+      if(confirm("Reset the form?")) {
+        // Reset the form data
+        parentForm.reset();
+        // Clear session data
+        sessionStorage.removeItem("form_data");
+  
+        // Reset Date input
+        dateInput.valueAsDate = new Date();
+        // Reset TimeInput
+        startTimeInput.value = getTimeHHMM();
+        // Reset Shift
+        shiftInput.value = getCurrentShift();
+      }
     });
 
     // END VIEWS
