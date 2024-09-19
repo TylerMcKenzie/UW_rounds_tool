@@ -78,6 +78,32 @@
   .button_container button {
     width: 48%;
   }
+
+  fieldset[name="field_display_order"] {
+    justify-content: center;
+  }
+
+  fieldset[name="field_display_order"] div {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5em;
+  }
+
+  fieldset[name="field_display_order"] label {
+    font-size: 48px;
+    text-transform: uppercase;
+  }
+
+  fieldset[name="field_display_order"] select {
+    font-size: 2rem;
+    padding: 0.5rem;
+  }
+
+  fieldset[name="field_display_order"] select option {
+    
+  }
+
 </style>
 
 <body>
@@ -218,6 +244,10 @@
       <textarea name="notes"></textarea>
     </fieldset>
 
+    <fieldset name="field_display_order">
+      <legend>Display Order</legend>
+    </fieldset>
+
     <button type="submit">SUBMIT</button>
 
   </form>
@@ -226,13 +256,14 @@
     // Form Navigation
     var form = document.getElementById("rounds_form");
 
-    var fieldlist = $(form).find("fieldset");
     // Hide all the fieldsets except the first
     $(form).find("fieldset:not(:first)").hide();
 
     var index = 0;
     $(form).find(".button_container").on("click", "button", (e) => {
       e.preventDefault();
+      var fieldlist = $(form).find("fieldset"); // This is ass to do - but like - who cares?
+
       var _$elm = $(e.target);
       var prevIndex = index;
 
@@ -268,24 +299,24 @@
       var cT = current.getTime();
   
       // First Shift
-      var first_start = setDateTime(new Date(current), '07:00:00').getTime();
+      var first_start = setDateTime(new Date(current), '07:01:00').getTime();
       var first_end = setDateTime(new Date(current), '15:00:00').getTime();
   
       // Second Shift
-      var second_start = setDateTime(new Date(current), '15:00:00').getTime();
+      var second_start = setDateTime(new Date(current), '15:01:00').getTime();
       var second_end = setDateTime(new Date(current), '23:00:00').getTime();
   
       // Third Shift
-      var third_start = setDateTime(new Date(current), '23:00:00').getTime();
+      var third_start = setDateTime(new Date(current), '23:01:00').getTime();
       var third_end = setDateTime(new Date(current), '07:00:00').getTime();
 
       var curr_shift = "1st";
 
-      if (first_start < cT && cT < first_end) {
+      if (first_start < cT < first_end) {
         curr_shift = "1st";
-      } else if (second_start < cT && cT < second_end) {
+      } else if (second_start < cT < second_end) {
         curr_shift = "2nd";
-      } else /*if (third_start < cT < third_end)*/ {
+      } else if (third_start < cT || cT < third_end) {
         curr_shift = "3rd";
       }
 
@@ -314,13 +345,42 @@
 
     // Rounds Start time INPUT
 
+    // save the time when the pumps swap over
+    let sessionFormData = sessionStorage.getItem("form_data")
+    
+    if (sessionFormData) {
+      let pumpSwapDate = sessionFormData.pumpSwapDate
+
+      if (!pumpSwapDate) {
+        pumpSwapDate = new Date();
+        // pumpSwapDate.setDay(2);
+        pumpSwapDate.setHours("13");
+        pumpSwapDate.setMinutes("43");
+      }
+
+      if ((new Date()).getDay() == 2) {
+        // do the date check here to display warning message
+        // add events here too
+      }
+
+      // create and add hidden input
+      let hiddenDateInput = document.createElement("input");
+      hiddenDateInput.setAttribute("hidden", "true");
+      hiddenDateInput.setAttribute("value", pumpSwapDate.toString());
+      hiddenDateInput.name = "pumpSwapDate";
+
+      parentForm.prepend(hiddenDateInput);
+    }
+
     var reset_button = document.getElementById("reset_form_button");
     reset_button.addEventListener("click", (e) => {
       e.preventDefault();
       // Reset the form data
       parentForm.reset();
+      
       // Clear session data
-      sessionStorage.removeItem("form_data");
+      refreshSessionStorage(sessionStorage, "form_data")
+      // sessionStorage.removeItem("form_data");
 
       // Reset Date input
       dateInput.valueAsDate = new Date();
@@ -333,6 +393,10 @@
     // END VIEWS
 
     // FORM Data Tracking
+    function refreshSessionStorage(sessionStorage, sessionStorageItem) {
+      sessionStorage.removeItem(sessionStorageItem);
+    }
+
     window.addEventListener("load", (e) => {
       // Check for session data
       var form_data_json = sessionStorage.getItem("form_data");
@@ -544,8 +608,147 @@
       XLSX.writeFile(tdc_operations_rounds_workbook, "TDC_Operations_Rounds_" + save_date.getMonth() + "_" + save_date.getDate() + "_" + save_date.getFullYear() + ".xlsx", { compression: true });
 
       // Clean up session data
-      sessionStorage.removeItem("form_data");
+      refreshSessionStorage(sessionStorage, "form_data");
+      // sessionStorage.removeItem("form_data");
     });
+  </script>
+  <script type="text/javascript">
+    function getOnloadFieldsetList(fieldset_nodelist) {
+      let return_nodelist = [];
+      fieldset_nodelist.forEach((fieldset) => {
+        return_nodelist.push(fieldset.getAttribute("name"));
+      })
+      // console.log(return_nodelist)
+      return return_nodelist;
+    }
+
+    let new_list_order = JSON.parse(sessionStorage.getItem("field_display_order"));
+    // let new_list_order = sessionStorage.getItem("field_display_order");
+    console.log(new_list_order)
+    
+    function reorderFieldlistDestructive(order, parentElement, elementToInsertBefore) {
+      let element_order = [];
+      // Get all fieldsets currently on the page
+      let fieldset_list = parentElement.querySelectorAll("fieldset");
+
+      for(let field_name of order) {
+        fieldset_list.forEach((fieldset) => {
+          if (field_name == fieldset.getAttribute("name")) {
+            element_order.push(fieldset);
+            fieldset.remove();
+          }
+        })
+      }
+
+      for (let element of element_order) {
+        elementToInsertBefore.insertAdjacentElement("beforebegin", element);
+      }
+    }
+
+    if (new_list_order) {
+      // Clear existing fieldsets for new order injection
+      reorderFieldlistDestructive(new_list_order, parentForm, parentForm.querySelector("fieldset[name=field_display_order]"))
+    }
+
+    function buildFieldlistElements(fieldset_list, elementToInsertBefore) {
+      for (let fieldset_name_index in fieldset_list) {
+        if (fieldset_list[fieldset_name_index] == "shift_metadata" || fieldset_list[fieldset_name_index] == "field_display_order") {
+          continue;
+        }
+
+        let container_div = document.createElement("div");
+        container_div.setAttribute("data-index", fieldset_name_index)
+
+        let fieldset_order_input_label = document.createElement("label");
+        fieldset_order_input_label.innerHTML = fieldset_list[fieldset_name_index];
+
+        let fieldset_order_input = document.createElement("select");
+        fieldset_order_input.setAttribute("name", "field_display_order_list[" + fieldset_list[fieldset_name_index] + "]");
+        // fieldset_order_input.attributes.onmousedown="this.size = 6";
+        // fieldset_order_input.attributes.onblur="this.size=0";
+
+        for (let i = 0; i < fieldset_list.length; i++) {
+          let fieldset_order_input_option = document.createElement("option");
+          fieldset_order_input_option.value = i;
+          fieldset_order_input_option.innerHTML = i
+
+          if (i == fieldset_name_index) {
+            fieldset_order_input_option.selected = true;
+          }
+
+          fieldset_order_input.insertAdjacentElement("beforeend", fieldset_order_input_option)
+        }
+        container_div.insertAdjacentElement("beforeend", fieldset_order_input_label)
+        container_div.insertAdjacentElement("beforeend", fieldset_order_input)
+
+        elementToInsertBefore.insertAdjacentElement("beforeend", container_div)
+      }
+    }
+
+    // Get the current fieldset list on the page after reordering them
+    onload_fieldset = getOnloadFieldsetList(parentForm.querySelectorAll("fieldset"))
+
+    let field_display_order_element = parentForm.querySelector("fieldset[name=field_display_order]");
+    
+    buildFieldlistElements(onload_fieldset, field_display_order_element);
+
+    // Rebuild the entire form with the fieldset that were found "onload" of this function
+    
+</script>
+  <script>
+    let field_display_order = document.querySelector("fieldset[name='field_display_order']")
+    
+    field_display_order.addEventListener("change", (evt) => {
+      if (evt.target.nodeName !== "SELECT") {
+        return;
+      }
+
+      evt.target.size = 0;
+
+      // reorder existing input order
+      //   - get field_display_order data
+      //   - rerender the fieldset with the given data
+
+      // save changes into the storage object
+      let temp = []
+      field_display_order.querySelectorAll("select").forEach((select) => {
+        let name = /\[(\w*)\]/.exec(select.getAttribute("name"))[1];
+
+        let value;
+        if (
+          evt.target.name != select.name &&
+          evt.target.value == select.value
+        ) {
+          value = parseInt(select.value) + 1;
+        } else {
+          value = parseInt(select.value);
+        }
+
+        console.log("%s : %s", name, value)
+        
+        temp.push([name, value])
+        // field_display_order_data.splice(value, 0, name)
+      })
+
+      let field_display_order_data = 
+        temp.sort((a,b) => a[1] - b[1])
+            .map((value) => value[0]);
+      
+      let field_display_order_element = parentForm.querySelector("fieldset[name=field_display_order]");
+
+      field_display_order_element.querySelectorAll("div").forEach((fieldset) => fieldset.remove())
+
+      reorderFieldlistDestructive(field_display_order_data, parentForm, field_display_order_element)
+
+      let onload_fieldset = getOnloadFieldsetList(parentForm.querySelectorAll("fieldset"))
+
+      let field_display_order_data_json = JSON.stringify(field_display_order_data)
+
+      buildFieldlistElements(onload_fieldset, field_display_order_element);
+
+      // Set field_display_order storage item
+      sessionStorage.setItem("field_display_order", field_display_order_data_json)
+    })
   </script>
 </body>
 
