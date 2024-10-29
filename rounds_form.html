@@ -322,7 +322,7 @@
   
       // Third Shift
       var third_start = setDateTime(new Date(current), '23:01:00').getTime();
-      var third_end = setDateTime(new Date(current), '07:00:00').getTime();
+      var third_end = setDateTime(new Date(current.getDate() + 1), '07:00:00').getTime();
 
       var curr_shift = "1st";
 
