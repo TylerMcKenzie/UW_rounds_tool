@@ -348,7 +348,8 @@
     // DATE INPUT
     // Set date to current date
     var dateInput = parentForm.querySelector("input[name='date']");
-    var dateINputDate = new Date();
+    var dateINputDate = (new Date()).toLocaleDateString();
+
     dateInput.valueAsDate = dateINputDate;
     // DATE INPUT
 
