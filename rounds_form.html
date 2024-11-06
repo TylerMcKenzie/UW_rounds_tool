@@ -350,7 +350,7 @@
     var dateInput = parentForm.querySelector("input[name='date']");
     var dateINputDate = (new Date(Date.now()));
 
-    dateInput.valueAsDate = dateINputDate;
+    dateInput.value = dateINputDate.getFullYear() + "/" + dateINputDate.getMonth() + "/" + dateINputDate.getDay();
     // DATE INPUT
 
     // Rounds Start time INPUT
