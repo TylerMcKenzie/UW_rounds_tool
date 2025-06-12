@@ -366,7 +366,7 @@
     // Rounds Start time INPUT
 
     // save the time when the pumps swap over
-    let sessionFormData = sessionStorage.getItem("form_data")
+    let sessionFormData = localStorage.getItem("form_data")
     
     if (sessionFormData) {
       let pumpSwapDate = sessionFormData.pumpSwapDate
@@ -400,15 +400,15 @@
       parentForm.reset();
       
       // Clear session data
-      refreshSessionStorage(sessionStorage, "form_data")
-      // sessionStorage.removeItem("form_data");
+      refreshlocalStorage(localStorage, "form_data")
+      // localStorage.removeItem("form_data");
 
 
       if(confirm("Reset the form?")) {
         // Reset the form data
         parentForm.reset();
         // Clear session data
-        sessionStorage.removeItem("form_data");
+        localStorage.removeItem("form_data");
   
         // Reset Date input
         dateInput.valueAsDate = new Date();
@@ -422,13 +422,13 @@
     // END VIEWS
 
     // FORM Data Tracking
-    function refreshSessionStorage(sessionStorage, sessionStorageItem) {
-      sessionStorage.removeItem(sessionStorageItem);
+    function refreshlocalStorage(localStorage, localStorageItem) {
+      localStorage.removeItem(localStorageItem);
     }
 
     window.addEventListener("load", (e) => {
       // Check for session data
-      var form_data_json = sessionStorage.getItem("form_data");
+      var form_data_json = localStorage.getItem("form_data");
 
       if (form_data_json) {
         var form_data = JSON.parse(form_data_json);
@@ -478,7 +478,7 @@
     // Save form Session data
     window.addEventListener("beforeunload", (e) => {
       var form_data = JSON.stringify($(parentForm).serializeObject());
-      sessionStorage.setItem("form_data", form_data);
+      localStorage.setItem("form_data", form_data);
     });
 
     // FORM SUBMIT
@@ -637,8 +637,8 @@
       XLSX.writeFile(tdc_operations_rounds_workbook, "TDC_Operations_Rounds_" + save_date.getMonth() + "_" + save_date.getDate() + "_" + save_date.getFullYear() + ".xlsx", { compression: true });
 
       // Clean up session data
-      refreshSessionStorage(sessionStorage, "form_data");
-      // sessionStorage.removeItem("form_data");
+      refreshlocalStorage(localStorage, "form_data");
+      // localStorage.removeItem("form_data");
     });
   </script>
   <script type="text/javascript">
@@ -651,8 +651,8 @@
       return return_nodelist;
     }
 
-    let new_list_order = JSON.parse(sessionStorage.getItem("field_display_order"));
-    // let new_list_order = sessionStorage.getItem("field_display_order");
+    let new_list_order = JSON.parse(localStorage.getItem("field_display_order"));
+    // let new_list_order = localStorage.getItem("field_display_order");
     console.log(new_list_order)
     
     function reorderFieldlistDestructive(order, parentElement, elementToInsertBefore) {
@@ -776,7 +776,7 @@
       buildFieldlistElements(onload_fieldset, field_display_order_element);
 
       // Set field_display_order storage item
-      sessionStorage.setItem("field_display_order", field_display_order_data_json)
+      localStorage.setItem("field_display_order", field_display_order_data_json)
     })
   </script>
   <script>
@@ -785,7 +785,7 @@
     resetSortButton.addEventListener("click", (evt) => {
       evt.preventDefault();
 
-      sessionStorage.removeItem("field_display_order");
+      localStorage.removeItem("field_display_order");
       navigation.reload()
     })
   </script>
